@@ -76,8 +76,9 @@ build {
     sources = ["source.proxmox-iso.k0sdebian12"]
     provisioner "shell-local" {
         inline = [
-            "apt update -y",
-            "apt install -y git",
+            "apt update -y && apt upgrade -y",
+            "apt install -y git curl",
+            "curl --proto '=https' --tlsv1.2 -sSf https://get.k0s.sh | sh"
         ]
     }
 }
