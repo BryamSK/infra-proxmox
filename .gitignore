@@ -52,4 +52,3 @@ __pycache__/
 # Ignorar archivos sensibles
 .env
 packer/k0s/proxmox.auto.pkrvars.hcl
-packer/k0s/preseed/preseed.cfg
