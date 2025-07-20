@@ -24,7 +24,6 @@ variable "node" {
 }
 variable "vmuser" {
     type = string
-    sensitive = true
 }
 variable "vmpass" {
     type = string
@@ -37,18 +36,19 @@ source "proxmox-iso" "k0sdebian12" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = "node1"
-    ssh_timeout                 = "10m"
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
-    template_description        = "Kubernet Cluster, Devian12, generated on ${timestamp()}"
+    template_name               = "k0s-debian12"
+    template_description        = "Kubernet Cluster, Debian12, generated on ${timestamp()}"
     cores                       = 2
     cpu_type                    = "x86-64-v2-AES"
     memory                      = 2048
-    
+    ssh_timeout                 = "20m"
+    http_directory              = "config"
+
     network_adapters {
       bridge                    = "vmbr0"
       model                     = "virtio"
-      firewall                  = true
     }
 
     boot_iso {
@@ -63,25 +63,21 @@ source "proxmox-iso" "k0sdebian12" {
         type                    = "scsi"
     }
 
-  boot_command = [
-  "<esc><wait>",
-  "install auto=true priority=critical ",
-  "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-#   "debian-installer=es_ES auto locale=es_ES ",
-#   "kbd-chooser/method=es ",
-#   "keyboard-configuration/layout=es ",
-#   "keyboard-configuration/variant=es ",
-#   "hostname=k0s ",
-#   "fb=false debconf/frontend=noninteractive ",
-  "<enter>"
-  ]
-  boot_wait    = "20s"
+    boot_command = [
+    "<esc><wait>",
+    "install auto=true priority=critical ",
+    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+    "<enter>"
+    ]
+    boot_wait    = "20s"
 }
 
 build {
     sources = ["source.proxmox-iso.k0sdebian12"]
-
-    provisioner "ansible" {
-      playbook_file = "ansible/playbook.yml"
+    provisioner "shell-local" {
+        inline = [
+            "apt update -y",
+            "apt install -y git",
+        ]
     }
 }

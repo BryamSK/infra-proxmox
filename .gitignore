@@ -12,7 +12,7 @@
 packer_cache/
 output-*/             # directorios generados por packer builds
 *.pkr.hcl.lock.hcl    # archivo de bloqueo
-packer/k0s/preseed/preseed.cfg
+packer/k0s/config/preseed.cfg
 packer/k0s/proxmox.auto.pkrvars.hcl
 
 # --- Ansible ---

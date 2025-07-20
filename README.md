@@ -1,6 +1,6 @@
 # 🛠️ Infraestructura Setup Script para Debian
 
-Este script automatiza la instalación de herramientas esenciales de infraestructura sobre sistemas Debian. Incluye Docker, Terraform, Packer, Ansible, AWS CLI, Python, Go, kubectl y `gitlab-ci-local`.
+Este script automatiza la instalación de herramientas esenciales de infraestructura sobre sistemas Debian. Incluye Docker, Terraform, Packer, Ansible, AWS CLI, Python, Go, kubectl y gitlab-ci-local.
 
 ---
 
