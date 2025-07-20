@@ -1,0 +1,13 @@
+---
+- name: Provisionar K0s Base
+  hosts: all
+  become: yes
+  tasks:
+    - name: Instalar paquetes básicos
+      apt:
+        name:
+          - vim
+          - curl
+          - git
+        state: present
+        update_cache: yes
