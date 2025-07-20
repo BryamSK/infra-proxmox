@@ -1,0 +1,54 @@
+# --- General ---
+*.log
+*.bak
+*.tmp
+*.swp
+*.DS_Store
+*.retry
+*.tar.gz
+*.zip
+
+# --- Packer ---
+packer_cache/
+output-*/             # directorios generados por packer builds
+*.pkr.hcl.lock.hcl    # archivo de bloqueo
+
+# --- Ansible ---
+*.retry
+inventory/*.ini
+inventory/*.yml
+ansible.cfg
+vault_pass.txt        # si usas Ansible Vault con archivo
+
+# --- Terraform ---
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.*
+crash.log
+*.tfvars
+*.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# --- SSH / claves / secretos ---
+id_rsa
+id_rsa.pub
+*.pem
+*.key
+*.crt
+secrets/
+credentials/
+vault.yml             # si usas un archivo encriptado con Ansible Vault
+
+# --- Python virtualenv (por si usas ansible con venv) ---
+venv/
+.env/
+__pycache__/
+*.pyc
+
+# Ignorar archivos sensibles
+.env
+packer/k0s/proxmox.auto.pkrvars.hcl

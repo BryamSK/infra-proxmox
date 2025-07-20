@@ -33,3 +33,7 @@ git clone https://tu-repo.git
 cd tu-repo
 chmod +x setup_infra.sh
 sudo ./setup_infra.sh
+
+
+packer plugins install github.com/hashicorp/ansible
+packer plugins install github.com/hashicorp/proxmox
