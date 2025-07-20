@@ -12,6 +12,8 @@
 packer_cache/
 output-*/             # directorios generados por packer builds
 *.pkr.hcl.lock.hcl    # archivo de bloqueo
+k0s/packer/config/preseed.cfg
+k0s/packer/proxmox.auto.pkrvars.hcl
 
 # --- Ansible ---
 *.retry
@@ -51,4 +53,3 @@ __pycache__/
 
 # Ignorar archivos sensibles
 .env
-packer/k0s/proxmox.auto.pkrvars.hcl
