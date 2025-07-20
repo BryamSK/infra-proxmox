@@ -67,12 +67,6 @@ source "proxmox-iso" "k0sdebian12" {
   "<esc><wait>",
   "install auto=true priority=critical ",
   "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-#   "debian-installer=es_ES auto locale=es_ES ",
-#   "kbd-chooser/method=es ",
-#   "keyboard-configuration/layout=es ",
-#   "keyboard-configuration/variant=es ",
-#   "hostname=k0s ",
-#   "fb=false debconf/frontend=noninteractive ",
   "<enter>"
   ]
   boot_wait    = "20s"
