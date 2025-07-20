@@ -1,4 +1,4 @@
-# 🛠️ Infraestructura Setup Script para Debian
+# 🛠️ Infraestructura Setup Script para Debian script/infra_stack_install.sh
 
 Este script automatiza la instalación de herramientas esenciales de infraestructura sobre sistemas Debian. Incluye Docker, Terraform, Packer, Ansible, AWS CLI, Python, Go, kubectl y `gitlab-ci-local`.
 
@@ -33,7 +33,12 @@ git clone https://tu-repo.git
 cd tu-repo
 chmod +x setup_infra.sh
 sudo ./setup_infra.sh
+```
 
+---
 
+## 🚀 Packer
+```bash
 packer plugins install github.com/hashicorp/ansible
 packer plugins install github.com/hashicorp/proxmox
+```
