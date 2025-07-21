@@ -40,9 +40,9 @@ source "proxmox-iso" "k0sdebian12" {
     ssh_username                = var.vmuser
     template_name               = "k0s-debian12"
     template_description        = "Kubernet Cluster, Debian12, generated on ${timestamp()}"
-    cores                       = 2
+    cores                       = 1
     cpu_type                    = "x86-64-v2-AES"
-    memory                      = 2048
+    memory                      = 1024
     ssh_timeout                 = "20m"
     http_directory              = "config"
 
@@ -74,11 +74,37 @@ source "proxmox-iso" "k0sdebian12" {
 
 build {
     sources = ["source.proxmox-iso.k0sdebian12"]
+    provisioner "shell" {
+      inline = [
+          "apt update -y",
+          "apt install -y cloud-init qemu-guest-agent sudo curl git",
+          "systemctl enable qemu-guest-agent",
+          "systemctl start qemu-guest-agent",
+          "echo 'datasource_list: [ NoCloud, ConfigDrive ]' > /etc/cloud/cloud.cfg.d/90_dpkg.cfg",
+          "echo 'disable_root: false' >> /etc/cloud/cloud.cfg",
+          "echo 'preserve_hostname: true' >> /etc/cloud/cloud.cfg",
+          "cloud-init clean"
+          ]
+      }
     provisioner "shell-local" {
         inline = [
-            "apt update -y && apt upgrade -y",
-            "apt install -y git curl",
+            # "apt update -y",
+            # "apt upgrade -y",
+            # "apt install -y git curl",
             "curl --proto '=https' --tlsv1.2 -sSf https://get.k0s.sh | sh"
         ]
+    }
+    provisioner "file" {
+        source      = "/root/.ssh/id_rsa.pub"
+        destination = "/tmp/id_rsa.pub"
+    }
+    provisioner "shell" {
+        inline = [
+            "mkdir -p /root/.ssh",
+            "chmod 700 /root/.ssh",
+            "cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys",
+            "chmod 600 /root/.ssh/authorized_keys",
+            "chown root:root /root/.ssh/authorized_keys"
+        ]   
     }
 }
