@@ -101,11 +101,6 @@ build {
         "export DEBIAN_FRONTEND=noninteractive",
         "mkdir -p /etc/cloud/cloud.cfg.d",
         "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg"
-        #"systemctl start --now qemu-guest-agent",
-        #"systemctl enable cloud-init && systemctl start cloud-init",
-        #"cloud-init clean",
-        #"rm -f /etc/ssh/ssh_host_*",               
-        #"rm -rf /var/lib/cloud/* /var/log/cloud-init*"
       ]
     }
 }

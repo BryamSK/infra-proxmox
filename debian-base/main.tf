@@ -56,14 +56,16 @@ resource "proxmox_vm_qemu" "debian12" {
   full_clone      = true
   bootdisk        = "scsi0"
   scsihw          = "virtio-scsi-pci"
-  ipconfig0       = "ip=dhcp"
   ssh_user        = var.vm_user
   ssh_private_key = file(var.vm_private_key_path)
-  memory          = 512
+  memory          = 2048
+  ipconfig0       = "ip=dhcp"
+  agent           = 1
+
+
   cpu {
     type    = "x86-64-v2-AES"
-    cores   = 1
-    vcores  = 1
+    cores   = 2
   }
 
   disk {
@@ -72,6 +74,12 @@ resource "proxmox_vm_qemu" "debian12" {
     storage = var.storage_pool
     size    = "5G"
   }
+  disk {
+    slot    = "scsi2"
+    type    = "cloudinit"
+    storage = var.storage_pool
+  }
+  
   network {
     id        = 0
     bridge    = "vmbr0"
