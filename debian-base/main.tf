@@ -59,7 +59,7 @@ resource "proxmox_vm_qemu" "debian12" {
   ipconfig0       = "ip=dhcp"
   ssh_user        = var.vm_user
   ssh_private_key = file(var.vm_private_key_path)
-
+  memory          = 512
   cpu {
     type    = "x86-64-v2-AES"
     cores   = 1
