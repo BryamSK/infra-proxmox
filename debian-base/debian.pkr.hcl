@@ -40,9 +40,9 @@ source "proxmox-iso" "debian12" {
     ssh_username                = var.vmuser
     template_name               = "debian12"
     template_description        = "Kubernet Cluster, Debian12, generated on ${timestamp()}"
-    cores                       = 1
+    cores                       = 2
     cpu_type                    = "x86-64-v2-AES"
-    memory                      = 1024
+    memory                      = 2048
     ssh_timeout                 = "20m"
     http_directory              = "config"
     cloud_init                  = true
@@ -83,6 +83,10 @@ build {
         source      = "/root/.ssh/id_rsa.pub"
         destination = "/tmp/id_rsa.pub"
     }
+    provisioner "file" {
+        source      = "./config/99-custom.cfg"
+        destination = "/tmp/99-custom.cfg"
+    }
     provisioner "shell" {
         inline = [
             "mkdir -p /root/.ssh",
@@ -94,14 +98,14 @@ build {
     }
     provisioner "shell" {
       inline = [
-        "apt update && apt install -y cloud-init qemu-guest-agent",
+        "export DEBIAN_FRONTEND=noninteractive",
         "mkdir -p /etc/cloud/cloud.cfg.d",
-        "echo 'datasource_list: [ NoCloud, ConfigDrive ]\ndisable_root: false\nssh_pwauth: false' > /etc/cloud/cloud.cfg.d/99-custom.cfg",
-        "systemctl enable --now qemu-guest-agent",
-        "systemctl enable cloud-init",
-        "cloud-init clean",
-        "rm -f /etc/ssh/ssh_host_*",               
-        "rm -rf /var/lib/cloud/* /var/log/cloud-init*"
+        "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg"
+        #"systemctl start --now qemu-guest-agent",
+        #"systemctl enable cloud-init && systemctl start cloud-init",
+        #"cloud-init clean",
+        #"rm -f /etc/ssh/ssh_host_*",               
+        #"rm -rf /var/lib/cloud/* /var/log/cloud-init*"
       ]
     }
 }
