@@ -35,11 +35,11 @@ source "proxmox-iso" "debian12" {
     username                    = var.proxmox_username
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
-    node                        = "node1"
+    node                        = var.node
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian12"
-    template_description        = "Kubernet Cluster, Debian12, generated on ${timestamp()}"
+    template_description        = "Debian12 Base, generated on ${timestamp()}"
     cores                       = 2
     cpu_type                    = "x86-64-v2-AES"
     memory                      = 2048
