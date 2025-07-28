@@ -1,0 +1,8 @@
+#cloud-config
+datasource_list: [ NoCloud, ConfigDrive ]
+disable_root: false
+ssh_pwauth: false
+
+runcmd:
+  - apt update
+  - apt upgrade -y

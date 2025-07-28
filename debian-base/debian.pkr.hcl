@@ -22,6 +22,9 @@ variable "proxmox_token" {
 variable "node" {
     type = string
 }
+variable "vm_id" {
+    type = number
+}
 variable "vmuser" {
     type = string
 }
@@ -36,19 +39,21 @@ source "proxmox-iso" "debian12" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node
+    vm_id                       = var.vm_id
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian12"
     template_description        = "Debian12 Base, generated on ${timestamp()}"
-    cores                       = 2
-    cpu_type                    = "x86-64-v2-AES"
-    memory                      = 2048
+    cores                       = 4
+    cpu_type                    = "kvm64"
+    memory                      = 4096
     ssh_timeout                 = "20m"
     http_directory              = "config"
     cloud_init                  = true
     cloud_init_storage_pool     = "local-lvm"
     cloud_init_disk_type        = "scsi"
-    qemu_agent                  = true       
+    qemu_agent                  = true
+    boot_wait                   = "20s"      
 
     network_adapters {
       bridge                    = "vmbr0"
@@ -73,7 +78,6 @@ source "proxmox-iso" "debian12" {
     "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
     "<enter>"
     ]
-    boot_wait    = "20s"
 }
 
 build {
@@ -94,13 +98,12 @@ build {
             "cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys",
             "chmod 600 /root/.ssh/authorized_keys",
             "chown root:root /root/.ssh/authorized_keys",
+            "export DEBIAN_FRONTEND=noninteractive",
+            "mkdir -p /etc/cloud/cloud.cfg.d",
+            "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg",
+            "cat /dev/null > /etc/network/interfaces",
+            "echo 'source /etc/network/interfaces.d/*' >> /etc/network/interfaces",
+            "cloud-init clean"
         ]   
-    }
-    provisioner "shell" {
-      inline = [
-        "export DEBIAN_FRONTEND=noninteractive",
-        "mkdir -p /etc/cloud/cloud.cfg.d",
-        "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg"
-      ]
     }
 }

@@ -64,10 +64,8 @@ resource "proxmox_vm_qemu" "debian12" {
 
 
   cpu {
-    type    = "x86-64-v2-AES"
-    cores   = 2
+    cores   = 1
   }
-
   disk {
     slot    = "scsi0"
     type    = "disk"
@@ -79,7 +77,6 @@ resource "proxmox_vm_qemu" "debian12" {
     type    = "cloudinit"
     storage = var.storage_pool
   }
-  
   network {
     id        = 0
     bridge    = "vmbr0"
