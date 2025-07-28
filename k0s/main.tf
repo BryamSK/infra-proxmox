@@ -68,7 +68,6 @@ resource "proxmox_vm_qemu" "k0s_master" {
   count           = 1
   name            = "k0s-master-${count.index + 1}"
   target_nodes    = var.nodes
-  #target_node    = var.node
   clone           = "debian12"
   full_clone      = true
   bootdisk        = "scsi0"
@@ -81,8 +80,7 @@ resource "proxmox_vm_qemu" "k0s_master" {
   ipconfig0       = "ip=${element(var.ips_master, count.index)}/24"
 
   cpu {
-    type  = "x86-64-v2-AES"
-    cores = 1
+    cores   = 1
   }
   disk {
     slot    = "scsi0"
@@ -134,7 +132,6 @@ resource "proxmox_vm_qemu" "k0s_node" {
 
   cpu {
     cores   = 1
-    vcores  = 2
   }
   disk {
     slot    = "scsi0"
