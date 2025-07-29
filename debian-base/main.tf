@@ -62,18 +62,14 @@ resource "proxmox_vm_qemu" "debian12" {
   ipconfig0       = "ip=dhcp"
   agent           = 1
 
-
-  cpu {
-    cores   = 1
-  }
   disk {
     slot    = "scsi0"
     type    = "disk"
+    size    = "10G"
     storage = var.storage_pool
-    size    = "5G"
   }
   disk {
-    slot    = "scsi2"
+    slot    = "scsi1"
     type    = "cloudinit"
     storage = var.storage_pool
   }

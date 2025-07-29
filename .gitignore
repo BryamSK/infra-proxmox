@@ -26,7 +26,7 @@ vault_pass.txt        # si usas Ansible Vault con archivo
 .terraform/
 .terraform.lock.hcl
 terraform.tfstate
-terraform.tfstate.*
+*terraform.tfstate.*
 crash.log
 *.tfvars
 *.tfvars.json

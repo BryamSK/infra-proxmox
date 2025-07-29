@@ -67,7 +67,7 @@ source "proxmox-iso" "debian12" {
     }
 
     disks {
-        disk_size               = "5G"
+        disk_size               = "10G"
         storage_pool            = "local-lvm"
         type                    = "scsi"
     }
