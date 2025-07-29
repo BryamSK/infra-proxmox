@@ -1,6 +1,0 @@
-proxmox_api_url     = "https://proxmox.local:8006/api2/json"
-proxmox_username    = "user@local!tokenid"
-proxmox_token       = "token"
-node                = "pvx"
-vmuser              = "user"
-vmpass              = "pass"
