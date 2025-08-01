@@ -39,7 +39,6 @@ source "proxmox-clone" "docker" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node
-
     full_clone                  = true
     clone_vm                    = "debian12"
     vm_name                     = "docker"

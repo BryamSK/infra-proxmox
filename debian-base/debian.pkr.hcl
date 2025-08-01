@@ -44,6 +44,7 @@ source "proxmox-iso" "debian12" {
     ssh_username                = var.vmuser
     template_name               = "debian12"
     template_description        = "Debian12 Base, generated on ${timestamp()}"
+    tags                        = "debian12;template"
     cores                       = 4
     cpu_type                    = "kvm64"
     memory                      = 4096
@@ -103,7 +104,8 @@ build {
             "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg",
             "cat /dev/null > /etc/network/interfaces",
             "echo 'source /etc/network/interfaces.d/*' >> /etc/network/interfaces",
-            "cloud-init clean"
+            "apt update -y && apt upgrade -y && apt dist-upgrade -y"
+            "cloud-init clean",
         ]   
     }
 }
