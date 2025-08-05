@@ -1,10 +1,9 @@
 ###Cluster K0s on Proxmox
 # This Terraform configuration deploys a k0s cluster on Proxmox using a Debian template
-resource "proxmox_vm_qemu" "k0s_master" {
+resource "proxmox_vm_qemu" "k0s_single" {
   count = 1
-  name  = "k0s-master-${count.index + 1}"
-  #target_nodes    = var.nodes
-  target_node     = var.node
+  name  = "k0s-single-${count.index + 1}"
+  target_nodes    = var.nodes
   clone           = "k0s"
   full_clone      = true
   bootdisk        = "scsi0"
@@ -14,7 +13,7 @@ resource "proxmox_vm_qemu" "k0s_master" {
   memory          = 1024
   agent           = 1
   os_type         = "cloud-init"
-  ipconfig0       = "gw=192.168.99.1,ip=${element(var.ips_master, count.index)}/24"
+  ipconfig0       = "gw=192.168.99.1,ip=${element(var.ips_nodes, count.index)}/24"
 
   cpu {
     cores = 1
@@ -123,9 +122,14 @@ resource "proxmox_vm_qemu" "k0s_master" {
 # output "vm_ips_nodes" {
 #   value = [for vm in proxmox_vm_qemu.k0s_node : vm.ssh_host]
 # }
-output "vm_ips_master" {
-  value = [for vm in proxmox_vm_qemu.k0s_master : vm.ssh_host]
+# output "vm_ips_master" {
+#   value = [for vm in proxmox_vm_qemu.k0s_master : vm.ssh_host]
+# }
+
+output "vm_ip_single" {
+  value = [for vm in proxmox_vm_qemu.k0s_single : vm.ssh_host]
 }
+
 
 resource "null_resource" "wait_for_ssh" {
   provisioner "remote-exec" {
@@ -134,24 +138,24 @@ resource "null_resource" "wait_for_ssh" {
       type        = "ssh"
       user        = var.vm_user
       private_key = file(var.vm_private_key_path)
-      host        = proxmox_vm_qemu.k0s_master[0].ssh_host
+      host        = proxmox_vm_qemu.k0s_single[0].ssh_host
     }
   }
 
-  depends_on = [proxmox_vm_qemu.k0s_master]
+  depends_on = [proxmox_vm_qemu.k0s_single]
 }
 
 resource "null_resource" "get_kubeconfig" {
   provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -i ${var.vm_private_key_path} root@${proxmox_vm_qemu.k0s_master[0].ssh_host}:/root/kubeconfig ./kubeconfig-${proxmox_vm_qemu.k0s_master[0].name}"
+    command = "scp -o StrictHostKeyChecking=no -i ${var.vm_private_key_path} root@${proxmox_vm_qemu.k0s_single[0].ssh_host}:/root/kubeconfig ./kubeconfig-${proxmox_vm_qemu.k0s_single[0].name}"
   }
 
-  depends_on = [proxmox_vm_qemu.k0s_master]
+  depends_on = [null_resource.wait_for_ssh, proxmox_vm_qemu.k0s_single]
 }
 
 resource "null_resource" "merge_kubeconfigs" {
   provisioner "local-exec" {
     command = "export KUBECONFIG=$(find . -name 'kubeconfig-*' | paste -sd :) && kubectl config view --flatten > ~/.kube/config"
   }
-    depends_on = [proxmox_vm_qemu.k0s_master]
+    depends_on = [null_resource.get_kubeconfig]
 }
