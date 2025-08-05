@@ -36,19 +36,6 @@ resource "proxmox_vm_qemu" "k0s_single" {
     link_down = false
     model     = "virtio"
   }
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "k0s install controller --single",
-  #     "systemctl daemon-reload",
-  #     "k0s kubeconfig admin > kubeconfig"
-  #   ]
-  #   connection {
-  #     type        = "ssh"
-  #     user        = var.vm_user
-  #     private_key = file(var.vm_private_key_path)
-  #     host        = self.ssh_host
-  #   }
-  # }
 
   provisioner "remote-exec" {
     inline = [
@@ -66,65 +53,7 @@ resource "proxmox_vm_qemu" "k0s_single" {
       host        = self.ssh_host
     }
   }
-
 }
-# resource "proxmox_vm_qemu" "k0s_node" {
-#   count           = 2
-#   name            = "k0s-node-${count.index + 1}"
-#   target_nodes     = var.nodes
-#   clone           = "debian12"
-#   full_clone      = true
-#   bootdisk        = "scsi0"
-#   scsihw          = "virtio-scsi-pci"
-#   ssh_user        = var.vm_user
-#   ssh_private_key = file(var.vm_private_key_path)
-#   memory          = 512
-#   agent           = 1
-#   os_type         = "cloud-init"
-#   ipconfig0       = "ip=${element(var.ips_nodes, count.index)}/24"
-
-
-#   cpu {
-#     cores   = 1
-#   }
-#   disk {
-#     slot    = "scsi0"
-#     type    = "disk"
-#     storage = var.storage_pool
-#     size    = "10G"
-#   }
-#   disk {
-#     slot    = "scsi2"
-#     type    = "cloudinit"
-#     storage = var.storage_pool
-#   }
-#   network {
-#     id        = 0
-#     bridge    = "vmbr0"
-#     firewall  = false
-#     link_down = false
-#     model     = "virtio"
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#       "echo 'Provisioned ${self.name}'"
-#     ]
-#     connection {
-#       type        = "ssh"
-#       user        = var.vm_user
-#       private_key = file(var.vm_private_key_path)
-#       host        = self.ssh_host
-#     }
-#   }
-# }
-
-# output "vm_ips_nodes" {
-#   value = [for vm in proxmox_vm_qemu.k0s_node : vm.ssh_host]
-# }
-# output "vm_ips_master" {
-#   value = [for vm in proxmox_vm_qemu.k0s_master : vm.ssh_host]
-# }
 
 output "vm_ip_single" {
   value = [for vm in proxmox_vm_qemu.k0s_single : vm.ssh_host]
