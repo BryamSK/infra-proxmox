@@ -59,11 +59,6 @@ source "proxmox-clone" "docker" {
         bridge                  = "vmbr0"
         model                   = "virtio"
     }
-    disks {
-        disk_size               = "10G"
-        storage_pool            = "local-lvm"
-        type                    = "scsi"
-    }
 }
 
 build {

@@ -37,6 +37,17 @@ resource "proxmox_vm_qemu" "k0s_single" {
     model     = "virtio"
   }
 
+    provisioner "file" {
+        source      = "./config/metallb-config.yaml"
+        destination = "/tmp/metallb-config.yaml"
+        connection {
+            type        = "ssh"
+            user        = var.vm_user
+            private_key = file(var.vm_private_key_path)
+            host        = self.ssh_host
+        }
+    }
+
   provisioner "remote-exec" {
     inline = [
       "k0s install controller --single",
@@ -45,6 +56,9 @@ resource "proxmox_vm_qemu" "k0s_single" {
       "systemctl start k0scontroller",
       "sleep 20",
       "k0s kubeconfig admin > kubeconfig",
+      "mv /tmp/metallb-config.yaml .",
+      "k0s kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml",
+      "k0s kubectl apply -f metallb-config.yaml",
     ]
     connection {
       type        = "ssh"

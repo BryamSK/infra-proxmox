@@ -59,22 +59,16 @@ source "proxmox-clone" "k0s" {
         bridge                  = "vmbr0"
         model                   = "virtio"
     }
-    disks {
-        disk_size               = "10G"
-        storage_pool            = "local-lvm"
-        type                    = "scsi"
-    }
 }
 
 build {
   sources = ["source.proxmox-clone.k0s"]
     provisioner "shell" {
         inline = [
-            "export DEBIAN_FRONTEND=noninteractive"
+            "export DEBIAN_FRONTEND=noninteractive",
             "apt update -y && apt upgrade -y && apt dist-upgrade -y",
             "apt install -y curl",
             "curl --proto '=https' --tlsv1.2 -sSf https://get.k0s.sh | sh",
-            "k0s version"
         ]   
     }
 }
