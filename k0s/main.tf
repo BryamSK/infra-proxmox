@@ -60,7 +60,7 @@ resource "proxmox_vm_qemu" "k0s_single" {
       "k0s kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml",
       "k0s kubectl wait -n metallb-system --for=condition=Available deployment/controller --timeout=180s",
       "k0s kubectl wait -n metallb-system --for=condition=Available deployment/speaker --timeout=180s",
-      "sleep 10",
+      "sleep 20",
       "k0s kubectl apply -f metallb-config.yaml",
     ]
     connection {
