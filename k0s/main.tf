@@ -1,8 +1,8 @@
 ###Cluster K0s on Proxmox
 # This Terraform configuration deploys a k0s cluster on Proxmox using a Debian template
 resource "proxmox_vm_qemu" "k0s_single" {
-  count = 1
-  name  = "k0s-single-${count.index + 1}"
+  count           = 1
+  name            = "k0s-single-${count.index + 1}"
   target_nodes    = var.nodes
   clone           = "k0s"
   full_clone      = true
@@ -37,16 +37,16 @@ resource "proxmox_vm_qemu" "k0s_single" {
     model     = "virtio"
   }
 
-    provisioner "file" {
-        source      = "./config/metallb-config.yaml"
-        destination = "/tmp/metallb-config.yaml"
-        connection {
-            type        = "ssh"
-            user        = var.vm_user
-            private_key = file(var.vm_private_key_path)
-            host        = self.ssh_host
-        }
+  provisioner "file" {
+    source      = "./config/metallb-config.yaml"
+    destination = "/tmp/metallb-config.yaml"
+    connection {
+      type        = "ssh"
+      user        = var.vm_user
+      private_key = file(var.vm_private_key_path)
+      host        = self.ssh_host
     }
+  }
 
   provisioner "remote-exec" {
     inline = [
@@ -58,6 +58,9 @@ resource "proxmox_vm_qemu" "k0s_single" {
       "k0s kubeconfig admin > kubeconfig",
       "mv /tmp/metallb-config.yaml .",
       "k0s kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.12/config/manifests/metallb-native.yaml",
+      "k0s kubectl wait -n metallb-system --for=condition=Available deployment/controller --timeout=180s",
+      "k0s kubectl wait -n metallb-system --for=condition=Available deployment/speaker --timeout=180s",
+      "sleep 10",
       "k0s kubectl apply -f metallb-config.yaml",
     ]
     connection {
@@ -100,5 +103,5 @@ resource "null_resource" "merge_kubeconfigs" {
   provisioner "local-exec" {
     command = "export KUBECONFIG=$(find . -name 'kubeconfig-*' | paste -sd :) && kubectl config view --flatten > ~/.kube/config"
   }
-    depends_on = [null_resource.get_kubeconfig]
+  depends_on = [null_resource.get_kubeconfig]
 }
