@@ -19,10 +19,16 @@ variable "proxmox_token" {
     type = string
     sensitive = true
 }
-variable "node" {
+variable "node1" {
     type = string
 }
-variable "vm_id" {
+variable "node2" {
+    type = string
+}
+variable "vm_n1_id" {
+    type = number
+}
+variable "vm_n2_id" {
     type = number
 }
 variable "vmuser" {
@@ -32,19 +38,51 @@ variable "vmpass" {
     type = string
     sensitive = true
 }
+variable "template" {
+    type = string
+    sensitive = true
+}
 
-source "proxmox-clone" "k0s" {
+source "proxmox-clone" "k0s_n1" {
     proxmox_url                 = var.proxmox_api_url
     username                    = var.proxmox_username
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
-    node                        = var.node
+    node                        = var.node1
+    vm_id                       = var.vm_n1_id
     full_clone                  = true
-    clone_vm                    = "debian12"
+    clone_vm                    = var.template
     vm_name                     = "k0s"
-    vm_id                       = var.vm_id
-    template_description        = "Debian12 Base + Docker, generated on ${timestamp()}"
-    tags                        = "docker;debian12;template"
+    template_description        = "Debian Base + Docker, generated on ${timestamp()}"
+    tags                        = "docker;debian;template"
+    ssh_username                = var.vmuser
+    cloud_init                  = true
+    cloud_init_storage_pool     = "local-lvm"
+    cloud_init_disk_type        = "scsi"
+    qemu_agent                  = true
+    task_timeout                = "10m"
+
+    ipconfig {
+        ip                      = "dhcp"
+    }
+    network_adapters {
+        bridge                  = "vmbr0"
+        model                   = "virtio"
+    }
+}
+
+source "proxmox-clone" "k0s_n2" {
+    proxmox_url                 = var.proxmox_api_url
+    username                    = var.proxmox_username
+    token                       = var.proxmox_token
+    insecure_skip_tls_verify    = true
+    node                        = var.node2
+    vm_id                       = var.vm_n2_id
+    full_clone                  = true
+    clone_vm                    = var.template
+    vm_name                     = "k0s"
+    template_description        = "Debian Base + Docker, generated on ${timestamp()}"
+    tags                        = "docker;debian;template"
     ssh_username                = var.vmuser
     cloud_init                  = true
     cloud_init_storage_pool     = "local-lvm"
@@ -62,7 +100,10 @@ source "proxmox-clone" "k0s" {
 }
 
 build {
-  sources = ["source.proxmox-clone.k0s"]
+  sources = [
+    "source.proxmox-clone.k0s_n1",
+    "source.proxmox-clone.k0s_n2",
+    ]
     provisioner "shell" {
         inline = [
             "export DEBIAN_FRONTEND=noninteractive",
