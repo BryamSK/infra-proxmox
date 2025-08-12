@@ -13,12 +13,17 @@ variable "proxmox_token" {
     sensitive   = true
 }
 
-variable "node" {
-    type        = string
+variable "node1" {
+    type = string
 }
-
-variable "vm_id" {
-    type        = number
+variable "node2" {
+    type = string
+}
+variable "vm_n1_id" {
+    type = number
+}
+variable "vm_n2_id" {
+    type = number
 }
 
 variable "vmuser" {

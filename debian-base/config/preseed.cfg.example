@@ -3,10 +3,15 @@ d-i debian-installer/locale string es_ES.UTF-8
 d-i debian-installer/language string es
 d-i debian-installer/country string CO
 d-i keyboard-configuration/xkb-keymap select es
+
 ### Red
 d-i netcfg/choose_interface select auto
 d-i netcfg/get_hostname string debian
 d-i netcfg/get_domain string unassigned-domain
+d-i netcfg/enable boolean true
+d-i netcfg/dhcp_timeout string 60
+d-i netcfg/disable_dhcp boolean false
+
 ### Repositorios
 d-i mirror/country string manual
 d-i mirror/http/hostname string deb.debian.org
@@ -45,7 +50,9 @@ d-i partman/confirm_nooverwrite boolean true
 d-i base-installer/install-recommends boolean true
 
 ### Selección de software
-tasksel tasksel/first multiselect standard, ssh-server
+tasksel tasksel/first multiselect ssh-server
+d-i pkgsel/include string
+d-i pkgsel/upgrade select none
 
 ### Instalación de GRUB
 d-i grub-installer/only_debian boolean true
@@ -53,4 +60,7 @@ d-i grub-installer/with_other_os boolean true
 d-i grub-installer/bootdev string /dev/sda
 
 ### Finalización
+d-i preseed/late_command string \
+    in-target apt update; \
+    in-target apt install -y cloud-init qemu-guest-agent;
 d-i finish-install/reboot_in_progress note
