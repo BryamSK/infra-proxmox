@@ -116,6 +116,7 @@ build {
             "chmod 600 /root/.ssh/authorized_keys",
             "chown root:root /root/.ssh/authorized_keys",
             "export DEBIAN_FRONTEND=noninteractive",
+            "apt install -y cloud-init qemu-guest-agent",
             "mkdir -p /etc/cloud/cloud.cfg.d",
             "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg",
             "cat /dev/null > /etc/network/interfaces",
