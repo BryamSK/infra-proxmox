@@ -53,8 +53,8 @@ source "proxmox-clone" "k0s_n1" {
     full_clone                  = true
     clone_vm                    = var.template
     vm_name                     = "k0s"
-    template_description        = "${var.template} Base + Docker, generated on ${timestamp()}"
-    tags                        = "docker;${var.template};template"
+    template_description        = "${var.template} Base + k0s, generated on ${timestamp()}"
+    tags                        = "k0s;${var.template};template"
     ssh_username                = var.vmuser
     cloud_init                  = true
     cloud_init_storage_pool     = "local-lvm"
@@ -81,8 +81,8 @@ source "proxmox-clone" "k0s_n2" {
     full_clone                  = true
     clone_vm                    = var.template
     vm_name                     = "k0s"
-    template_description        = "${var.template} Base + Docker, generated on ${timestamp()}"
-    tags                        = "docker;${var.template};template"
+    template_description        = "${var.template} Base + k0s, generated on ${timestamp()}"
+    tags                        = "k0s;${var.template};template"
     ssh_username                = var.vmuser
     cloud_init                  = true
     cloud_init_storage_pool     = "local-lvm"
