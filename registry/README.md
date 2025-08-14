@@ -13,11 +13,9 @@ Este proyecto despliega un **Docker Registry privado** utilizando `docker-compos
 ```bash
 mkdir -p registry auth /registry
 ```
-
+.
 ├── docker-compose.yml # Definición de servicios
-
 ├── auth/ # Archivos de autenticación (htpasswd)
-
 └── /registry # Almacenamiento persistente de imágenes
 
 ```bash

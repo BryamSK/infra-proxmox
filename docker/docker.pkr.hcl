@@ -108,10 +108,15 @@ build {
         source      = "./config/install.sh"
         destination = "/tmp/install.sh"
     }
+    provisioner "file" {
+        source      = "./config/01_server.sh"
+        destination = "/tmp/01_server.sh"
+    }
     provisioner "shell" {
         inline = [
             "export DEBIAN_FRONTEND=noninteractive",
             "mkdir -p /scripts",
+            "cat /tmp/01_server.sh >> /etc/profile.d/01_server.sh",
             "cat /tmp/install.sh >> /scripts/install.sh",
             "cd /scripts && chmod +x install.sh && ./install.sh"
         ]   
