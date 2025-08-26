@@ -35,6 +35,9 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# --- Kubernetes ---
+*kubeconfig*
+
 # --- SSH / claves / secretos ---
 id_rsa
 id_rsa.pub

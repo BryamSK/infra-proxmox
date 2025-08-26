@@ -48,11 +48,11 @@ provider "proxmox" {
   pm_tls_insecure     = true
 }
 
-resource "proxmox_vm_qemu" "debian12" {
+resource "proxmox_vm_qemu" "docker" {
   count           = 1
-  name            = "debian12-${count.index + 1}"
+  name            = "docker-${count.index + 1}"
   target_node     = var.node
-  clone           = "debian12"
+  clone           = "docker"
   full_clone      = true
   bootdisk        = "scsi0"
   scsihw          = "virtio-scsi-pci"
@@ -95,5 +95,5 @@ resource "proxmox_vm_qemu" "debian12" {
 }
 
 output "vm_ips" {
-  value = [for vm in proxmox_vm_qemu.debian12 : vm.ssh_host]
+  value = [for vm in proxmox_vm_qemu.docker : vm.ssh_host]
 }
