@@ -34,3 +34,7 @@ variable "template" {
   description = "Name of the template to clone"
   type        = string
 }
+variable "sshkey" {
+  description = "SSH public key for VM user"
+  type        = string
+}

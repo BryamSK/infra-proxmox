@@ -4,7 +4,7 @@ source "proxmox-iso" "debian12-n1" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node1
-    vm_id                       = 200
+    vm_id                       = 201
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian12"
@@ -28,7 +28,7 @@ source "proxmox-iso" "debian12-n1" {
 
     boot_iso {
         type                    = "scsi"
-        iso_file                = "local:iso/debian12.iso"
+        iso_file                = "${var.isopath}debian12.iso"
         unmount                 = true
     }
 
@@ -52,7 +52,7 @@ source "proxmox-iso" "debian12-n2" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node2
-    vm_id                       = 300
+    vm_id                       = 202
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian12"
@@ -76,7 +76,7 @@ source "proxmox-iso" "debian12-n2" {
 
     boot_iso {
         type                    = "scsi"
-        iso_file                = "local:iso/debian12.iso"
+        iso_file                = "${var.isopath}debian12.iso"
         unmount                 = true
     }
 
@@ -102,7 +102,7 @@ build {
         ]
 
     provisioner "file" {
-        source      = "/root/.ssh/id_rsa.pub"
+        source      = var.sshkey
         destination = "/tmp/id_rsa.pub"
     }
     provisioner "file" {
