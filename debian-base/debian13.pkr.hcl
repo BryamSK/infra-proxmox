@@ -10,10 +10,11 @@ source "proxmox-iso" "debian13-n1" {
     template_name               = "debian13"
     template_description        = "Debian13 Base, generated on ${timestamp()}"
     tags                        = "debian13;template"
-    cores                       = 4
+    sockets                     = 2
+    cores                       = 2
     cpu_type                    = "kvm64"
     memory                      = 4096
-    ssh_timeout                 = "20m"
+    ssh_timeout                 = var.timeout
     http_directory              = "config"
     cloud_init                  = true
     cloud_init_storage_pool     = var.lvm
@@ -58,10 +59,11 @@ source "proxmox-iso" "debian13-n2" {
     template_name               = "debian13"
     template_description        = "Debian13 Base, generated on ${timestamp()}"
     tags                        = "debian13;template"
-    cores                       = 4
+    sockets                     = 2
+    cores                       = 2
     cpu_type                    = "kvm64"
     memory                      = 4096
-    ssh_timeout                 = "20m"
+    ssh_timeout                 = var.timeout
     http_directory              = "config"
     cloud_init                  = true
     cloud_init_storage_pool     = var.lvm

@@ -45,3 +45,8 @@ variable "sshkey" {
     type        = string
     sensitive   = true
 }
+variable "timeout" {
+    description = "SSH timeout for VM"
+    type        = string
+    sensitive   = true
+}
