@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.2.2"
+      version = ">= 1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -23,6 +23,9 @@ variable "node1" {
     type = string
 }
 variable "node2" {
+    type = string
+}
+variable "lvm" {
     type = string
 }
 variable "vm_n1_id" {
@@ -57,7 +60,7 @@ source "proxmox-clone" "docker_n1" {
     tags                        = "docker;${var.template};template"
     ssh_username                = var.vmuser
     cloud_init                  = true
-    cloud_init_storage_pool     = "local-lvm"
+    cloud_init_storage_pool     = var.lvm
     cloud_init_disk_type        = "scsi"
     qemu_agent                  = true
     task_timeout                = "10m"
@@ -85,7 +88,7 @@ source "proxmox-clone" "docker_n2" {
     tags                        = "docker;${var.template};template"
     ssh_username                = var.vmuser
     cloud_init                  = true
-    cloud_init_storage_pool     = "local-lvm"
+    cloud_init_storage_pool     = var.lvm
     cloud_init_disk_type        = "scsi"
     qemu_agent                  = true
     task_timeout                = "10m"

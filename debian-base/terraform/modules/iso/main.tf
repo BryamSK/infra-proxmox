@@ -8,14 +8,14 @@ resource "proxmox_vm_qemu" "debian" {
   scsihw          = "virtio-scsi-pci"
   ssh_user        = var.vm_user
   ssh_private_key = file(var.vm_private_key_path)
-  memory          = 2048
+  memory          = var.memory
   ipconfig0       = "ip=dhcp"
   agent           = 1
 
   disk {
     slot    = "scsi0"
     type    = "disk"
-    size    = "10G"
+    size    = var.disk_size
     storage = var.storage_pool
   }
   disk {
@@ -42,8 +42,4 @@ resource "proxmox_vm_qemu" "debian" {
       host        = self.ssh_host
     }
   }
-}
-
-output "vm_ips" {
-  value = [for vm in proxmox_vm_qemu.debian : vm.ssh_host]
 }

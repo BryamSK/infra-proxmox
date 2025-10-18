@@ -6,3 +6,6 @@ node                = "node"
 storage_pool        = "local-lvm"
 vm_user             = "user"
 vm_private_key_path = "/user/.ssh/id_rsa"
+template            = "your_templete"
+memory              = 1024
+disk_size           = "10G"

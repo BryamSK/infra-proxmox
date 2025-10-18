@@ -1,3 +1,4 @@
+
 variable "proxmox_api_url" {
   type      = string
   sensitive = true
@@ -26,15 +27,15 @@ variable "vm_private_key_path" {
   description = "Path to private SSH key for provisioning"
   type        = string
 }
-variable "node" {
+variable "node1" {
+  description = "Proxmox node where VMs will be created"
+  type        = string
+}
+variable "node2" {
   description = "Proxmox node where VMs will be created"
   type        = string
 }
 variable "template" {
-  description = "Name of the template to clone"
-  type        = string
-}
-variable "sshkey" {
-  description = "SSH public key for VM user"
+  description = "Proxmox node where VMs will be created"
   type        = string
 }

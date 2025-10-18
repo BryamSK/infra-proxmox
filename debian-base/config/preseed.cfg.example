@@ -19,14 +19,10 @@ d-i mirror/http/directory string /debian
 d-i mirror/http/proxy string
 
 ### Usuarios y contraseñas
-d-i passwd/root-login boolean false
-d-i passwd/root-password password yourpass
-d-i passwd/root-password-again password yourpass
+d-i passwd/root-login boolean true
+d-i passwd/root-password password your_pass_chenge
+d-i passwd/root-password-again password your_pass_chenge
 d-i passwd/make-user boolean false
-d-i passwd/user-fullname string username
-d-i passwd/username string user
-d-i passwd/user-password password yourpass
-d-i passwd/user-password-again password yourpass
 
 ### Zona horaria
 d-i clock-setup/utc boolean true
@@ -47,15 +43,23 @@ d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
 
 ### Selección de software
-tasksel tasksel/first multiselect ssh-server
-d-i pkgsel/include string
+tasksel tasksel/first multiselect
+d-i pkgsel/include string openssh-server
+d-i pkgsel/install-pattern string
 d-i pkgsel/upgrade select none
-### Instalación de GRUB
+popularity-contest popularity-contest/participate boolean false
 
+### Instalación de GRUB
 d-i grub-installer/only_debian boolean true
 d-i grub-installer/with_other_os boolean true
 d-i grub-installer/bootdev string /dev/sda
 
+# Habilitar acceso SSH root
+#d-i preseed/late_command string in-target sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+d-i preseed/late_command string \
+    in-target sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config; \
+    in-target sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config; \
+    in-target systemctl enable ssh; \
+    in-target systemctl restart ssh;
 ### Finalización
-d-i preseed/late_command string in-target sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 d-i finish-install/reboot_in_progress note

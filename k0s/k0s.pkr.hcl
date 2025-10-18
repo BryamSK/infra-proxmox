@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.2.2"
+      version = ">= 1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -44,9 +44,9 @@ variable "template" {
 }
 
 source "proxmox-clone" "k0s_n1" {
-    proxmox_url                 = var.proxmox_api_url
+    proxmox_url                 = var.proxmox_api_url_node1
     username                    = var.proxmox_username
-    token                       = var.proxmox_token
+    token                       = var.proxmox_token_node1
     insecure_skip_tls_verify    = true
     node                        = var.node1
     vm_id                       = var.vm_n1_id
