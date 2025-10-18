@@ -1,5 +1,5 @@
 module "debian_lxc" {
-  source = "../../modules/lxc"
+  source = "../modules/lxc"
 
     proxmox_api_url         = var.proxmox_api_url
     proxmox_username        = var.proxmox_username

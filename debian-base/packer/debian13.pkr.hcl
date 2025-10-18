@@ -4,7 +4,7 @@ source "proxmox-iso" "debian13-n1" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node1
-    vm_id                       = 301
+    vm_id                       = 203
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian13"
@@ -53,7 +53,7 @@ source "proxmox-iso" "debian13-n2" {
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node2
-    vm_id                       = 302
+    vm_id                       = 204
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
     template_name               = "debian13"

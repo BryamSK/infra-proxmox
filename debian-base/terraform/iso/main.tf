@@ -1,5 +1,5 @@
 module "debian_vm" {
-  source = "../../modules/iso"
+  source = "../modules/iso"
 
     proxmox_api_url         = var.proxmox_api_url
     proxmox_username        = var.proxmox_username
