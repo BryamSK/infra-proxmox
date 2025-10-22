@@ -1,0 +1,35 @@
+module "lxc-debian" {
+  source = "./modules/lxc-debian"
+
+    proxmox_api_url         = var.proxmox_api_url
+    proxmox_username        = var.proxmox_username
+    proxmox_token_id        = var.proxmox_token_id
+    proxmox_token           = var.proxmox_token
+    storage_pool            = var.storage_pool
+    vmid                    = var.vmid
+    password                = var.password
+    vm_user                 = var.vm_user
+    node                    = var.node
+    template_name           = var.template_name
+    template_path           = var.template_path
+    public_key_path         = var.public_key_path
+    private_key_path        = var.private_key_path
+    memory                  = var.memory
+    disk_size               = var.disk_size
+    arch                    = var.arch
+    cores                   = var.cores
+    cpulimit                = var.cpulimit
+    swap                    = var.swap
+    onboot                  = var.onboot
+    start                   = var.start
+    ip                      = var.ip
+    gw                      = var.gw
+    tags                    = var.tags
+}
+
+module "install_docker" {
+  source = "./modules/install-docker"
+    user                  = var.vm_user
+    private_key_path      = var.private_key_path
+    host                  = var.ip
+}

@@ -1,0 +1,8 @@
+proxmox_api_url     = "https://proxmox.local:8006/api2/json"
+proxmox_username    = "user@pve"
+proxmox_token_id    = "user@pve!user-token"
+proxmox_token       = "token"
+node                = "node"
+storage_pool        = "local-lvm"
+vm_user             = "user"
+vm_private_key_path = "/user/.ssh/id_rsa"
