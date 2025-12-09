@@ -1,5 +1,5 @@
 module "debian-base" {
-source = "./../modules/debian-base"
+  source = "./../modules/debian-base"
 
     proxmox_api_url         = var.proxmox_api_url
     proxmox_username        = var.proxmox_username
@@ -27,6 +27,7 @@ source = "./../modules/debian-base"
     tags                    = var.tags
     host                    = var.ip
     name                    = var.name
+    description             = var.description
 }
 
 module "install_k0s" {

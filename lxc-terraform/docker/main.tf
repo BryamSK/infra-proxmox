@@ -1,5 +1,5 @@
 module "debian-base" {
-source = "./../modules/debian-base"
+  source = "./../modules/debian-base"
 
     proxmox_api_url         = var.proxmox_api_url
     proxmox_username        = var.proxmox_username
@@ -27,6 +27,7 @@ source = "./../modules/debian-base"
     tags                    = var.tags
     host                    = var.ip
     name                    = var.name
+    description             = var.description
 }
 
 module "install_docker" {
@@ -34,5 +35,5 @@ module "install_docker" {
     user                  = var.user
     private_key_path      = var.private_key_path
     host                  = var.ip
-    depends_on = [module.ddebian-base]
+    depends_on = [module.debian-base]
 }

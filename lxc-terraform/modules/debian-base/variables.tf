@@ -109,4 +109,8 @@ variable "name" {
   description = "Usuario para SSH"
   type        = string
 }
+variable "description" {
+  description = "Description for the LXC container"
+  type        = string
+}
 

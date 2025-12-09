@@ -1,22 +1,22 @@
 variable "proxmox_api_url" {
   description = "Proxmox API URL"
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
 variable "proxmox_username" {
   description = "value for Proxmox username"
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
 variable "proxmox_token_id" {
   description = "Proxmox API token ID"
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
 variable "proxmox_token" {
   description = "Proxmox API token value"
-  type      = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
 variable "storage_pool" {
   description = "Storage pool for VM disks"
@@ -77,7 +77,7 @@ variable "swap" {
   description = "Swap for the VM"
   type        = number
 }
-variable "onboot" { 
+variable "onboot" {
   description = "Whether to start the container on boot"
   type        = bool
 }
@@ -91,11 +91,11 @@ variable "template_path" {
 }
 variable "ip" {
   description = "IP configuration for eth0"
-  type        = string 
+  type        = string
 }
 variable "gw" {
   description = "Gateway for eth0"
-  type        = string 
+  type        = string
 }
 variable "tags" {
   description = "Tags to apply to the LXC container"
@@ -105,5 +105,7 @@ variable "name" {
   description = "Hostname"
   type        = string
 }
-
-
+variable "description" {
+  description = "Description for the LXC container"
+  type        = string
+}

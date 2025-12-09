@@ -10,7 +10,7 @@ resource "proxmox_lxc" "debian" {
   memory          = var.memory
   swap            = var.swap
   ostype          = var.template_name
-  description     = "LXC container for ${var.template_name}"
+  description     = "${var.description}"
   onboot          = var.onboot
   start           = var.start
   password        = var.password
@@ -30,6 +30,8 @@ resource "proxmox_lxc" "debian" {
 }
 
 resource "null_resource" "debian" {
+  depends_on = [proxmox_lxc.debian]
+
   provisioner "file" {
     source      = "./../modules/debian-base/config/10_debian.sh"
     destination = "/etc/profile.d/10_debian.sh"
@@ -45,6 +47,7 @@ resource "null_resource" "debian" {
     inline = [
       "export DEBIAN_FRONTEND=noninteractive",
       "chmod +x /etc/profile.d/10_debian.sh",
+      "truncate -s 0 /etc/issue && truncate -s 0 /etc/issue.net && truncate -s 0 /etc/motd",
       "apt update && apt upgrade -y && apt dist-upgrade -y && apt autoremove -y && apt clean"
     ]
     connection {
@@ -54,4 +57,13 @@ resource "null_resource" "debian" {
       private_key = file(var.private_key_path)
     }
   }
-}  
+}
+
+resource "null_resource" "cleanup_known_hosts" {
+  depends_on = [null_resource.debian]
+
+  provisioner "local-exec" {
+    command = "ssh-keygen -f \"$HOME/.ssh/known_hosts\" -R '${var.ip}'"
+  }
+}
+
