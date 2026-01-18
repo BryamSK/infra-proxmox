@@ -1,13 +1,13 @@
-source "proxmox-clone" "docker_n1" {
+source "proxmox-clone" "docker" {
     proxmox_url                 = var.proxmox_api_url
     username                    = var.proxmox_username
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
-    node                        = var.node1
-    vm_id                       = var.vm_n1_id
+    node                        = var.node
+    vm_id                       = var.vm_id
     full_clone                  = true
     clone_vm                    = var.template
-    vm_name                     = "docker"
+    vm_name                     = "docker-template"
     template_description        = "${var.template} Base + Docker, generated on ${timestamp()}"
     tags                        = "docker;${var.template};template"
     ssh_username                = var.vmuser
@@ -17,34 +17,6 @@ source "proxmox-clone" "docker_n1" {
     qemu_agent                  = true
     task_timeout                = "10m"
 
-    ipconfig {
-        ip                      = "dhcp"
-    }
-    network_adapters {
-        bridge                  = "vmbr0"
-        model                   = "virtio"
-    }
-}
-
-source "proxmox-clone" "docker_n2" {
-    proxmox_url                 = var.proxmox_api_url
-    username                    = var.proxmox_username
-    token                       = var.proxmox_token
-    insecure_skip_tls_verify    = true
-    node                        = var.node2
-    vm_id                       = var.vm_n2_id
-    full_clone                  = true
-    clone_vm                    = var.template
-    vm_name                     = "docker"
-    template_description        = "${var.template} Base + Docker, generated on ${timestamp()}"
-    tags                        = "docker;${var.template};template"
-    ssh_username                = var.vmuser
-    cloud_init                  = true
-    cloud_init_storage_pool     = var.lvm
-    cloud_init_disk_type        = "scsi"
-    qemu_agent                  = true
-    task_timeout                = "10m"
-    
     ipconfig {
         ip                      = "dhcp"
     }
@@ -56,8 +28,7 @@ source "proxmox-clone" "docker_n2" {
 
 build {
   sources = [
-    "source.proxmox-clone.docker_n1",
-    "source.proxmox-clone.docker_n2",
+    "source.proxmox-clone.docker",
   ]
     provisioner "file" {
         source      = "./config/install.sh"

@@ -1,62 +1,13 @@
-source "proxmox-iso" "debian13-n1" {
+source "proxmox-iso" "debian13" {
     proxmox_url                 = var.proxmox_api_url
     username                    = var.proxmox_username
     token                       = var.proxmox_token
     insecure_skip_tls_verify    = true
     node                        = var.node1
-    vm_id                       = 203
+    vm_id                       = 913
     ssh_password                = var.vmpass
     ssh_username                = var.vmuser
-    template_name               = "debian13"
-    template_description        = "Debian13 Base, generated on ${timestamp()}"
-    tags                        = "debian13;template"
-    sockets                     = 2
-    cores                       = 2
-    cpu_type                    = "kvm64"
-    memory                      = 4096
-    ssh_timeout                 = var.timeout
-    http_directory              = "config"
-    cloud_init                  = true
-    cloud_init_storage_pool     = var.lvm
-    cloud_init_disk_type        = "scsi"
-    qemu_agent                  = true
-    boot_wait                   = "20s"
-  
-    network_adapters {
-      bridge                    = "vmbr0"
-      model                     = "virtio"
-    }
-
-    boot_iso {
-        type                    = "scsi"
-        iso_file                = "${var.isopath}debian13.iso"
-        unmount                 = true
-    }
-
-    disks {
-        disk_size               = "10G"
-        storage_pool            = var.lvm
-        type                    = "scsi"
-    }
-
-    boot_command = [
-    "<esc><wait>",
-    "install auto=true priority=critical ",
-    "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
-    "<enter>"
-    ]
-}
-
-source "proxmox-iso" "debian13-n2" {
-    proxmox_url                 = var.proxmox_api_url
-    username                    = var.proxmox_username
-    token                       = var.proxmox_token
-    insecure_skip_tls_verify    = true
-    node                        = var.node2
-    vm_id                       = 204
-    ssh_password                = var.vmpass
-    ssh_username                = var.vmuser
-    template_name               = "debian13"
+    template_name               = "debian13-template"
     template_description        = "Debian13 Base, generated on ${timestamp()}"
     tags                        = "debian13;template"
     sockets                     = 2
@@ -98,8 +49,7 @@ source "proxmox-iso" "debian13-n2" {
 
 build {
     sources = [
-        "source.proxmox-iso.debian13-n1",
-        "source.proxmox-iso.debian13-n2",
+        "source.proxmox-iso.debian13",
         ]
 
     provisioner "file" {
@@ -109,6 +59,10 @@ build {
     provisioner "file" {
         source      = "./config/99-custom.cfg"
         destination = "/tmp/99-custom.cfg"
+    }
+    provisioner "file" {
+        source      = "./config/10_debian.sh"
+        destination = "/tmp/10_debian.sh"
     }
     provisioner "shell" {
         inline = [
@@ -121,6 +75,8 @@ build {
             "apt install -y cloud-init qemu-guest-agent",
             "mkdir -p /etc/cloud/cloud.cfg.d",
             "cat /tmp/99-custom.cfg >> /etc/cloud/cloud.cfg.d/99-custom.cfg",
+            "cat /tmp/10_debian.sh >> /etc/profile.d/10_debian.sh",
+            "chmod +x /etc/profile.d/10_debian.sh",
             "cat /dev/null > /etc/network/interfaces",
             "echo 'source /etc/network/interfaces.d/*' >> /etc/network/interfaces",
             "apt update -y && apt upgrade -y && apt dist-upgrade -y",
