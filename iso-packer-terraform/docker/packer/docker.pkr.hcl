@@ -13,7 +13,7 @@ source "proxmox-clone" "docker" {
     ssh_username                = var.vmuser
     cloud_init                  = true
     cloud_init_storage_pool     = var.lvm
-    cloud_init_disk_type        = "scsi"
+    cloud_init_disk_type        = "ide"
     qemu_agent                  = true
     task_timeout                = "10m"
 
