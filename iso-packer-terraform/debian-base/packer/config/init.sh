@@ -9,7 +9,8 @@ SEARCHDOMAIN="${SEARCHDOMAIN:-}"
 
 # Paquetes necesarios
 apt update -y && apt upgrade -y && apt dist-upgrade -y
-apt-get install -y cloud-init cloud-guest-utils qemu-guest-agent systemd-resolved vim curl ca-certificates
+apt-get install -y cloud-init cloud-guest-utils qemu-guest-agent systemd-resolved vim curl ca-certificates parted
+apt-get autoremove -y && apt-get clean -y
 
 # Habilitar servicios
 systemctl enable --now qemu-guest-agent
